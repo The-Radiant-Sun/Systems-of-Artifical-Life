@@ -13,19 +13,19 @@ class ParticleType {
   Particle[] particles;
   ParticleType[] particleTypes;
   int[][] typeInteractions;
-  int accelerationLimit;
+  int velocityLimit;
   
-  ParticleType(int[][] t_typeInteractions, int[][] typeValues, int t_typeNumber, int numberOfParticleTypes) {
+  ParticleType(int[][] typeInteractions_, int[][] typeValues, int typeNumber_, int numberOfParticleTypes) {
     colour = typeValues[0];
     size = typeValues[1][0];
     particleNumber = typeValues[2][0];
     
-    typeNumber = t_typeNumber;
+    typeNumber = typeNumber_;
     
     particles = new Particle[particleNumber];
     particleTypes = new ParticleType[numberOfParticleTypes];
-    typeInteractions = t_typeInteractions;
-    accelerationLimit = typeValues[3][0];
+    typeInteractions = typeInteractions_;
+    velocityLimit = typeValues[3][0];
     
     // Spawning all particles of this type
     for (int i = 0; i < particleNumber; i++) {
@@ -39,19 +39,14 @@ class ParticleType {
   
   /* Calculate response acceleration vector from the effect of one particle on antoher */
   PVector response(Particle origin, Particle affector) {
-    if (origin.position != affector.position) {
-      PVector distance = new PVector(1,1);//affector.position.sub(origin.position);
-      print(affector.position.sub(origin.position));
-      print('\n');
-      PVector force = distance.mult(1 / distance.magSq());
-      print(affector.position.sub(origin.position).mult(1 / affector.position.sub(origin.position).magSq()));
-      print('\n');
+    PVector distance = PVector.sub(affector.position, origin.position);
+    if (distance.mag() != 0) {
+      // The basic force is equal to the normal of the distance divided by the square of the magnitude of the distance
+      PVector force = distance.normalize().mult(1 / distance.magSq());
+      // Affect the force by the relationship between the origin and affector particle types
       PVector acceleration = force.mult(typeInteractions[origin.type.typeNumber][affector.type.typeNumber]);
-      print(affector.position.sub(origin.position).mult(1 / affector.position.sub(origin.position).magSq()).mult(typeInteractions[origin.type.typeNumber][affector.type.typeNumber]));
-      print('\n');
-      print('\n');
-      return new PVector(0,0);
+      return acceleration;
     }
-    return new PVector(0,0);
+    return distance;
   }
 }

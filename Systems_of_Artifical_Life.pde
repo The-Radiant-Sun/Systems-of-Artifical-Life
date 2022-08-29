@@ -9,10 +9,10 @@ int[][] typeInteractions = {
   {1,  1}
 };
 
-// Colour, size, particle number, and acceleration limit
+// Colour, size, particle number, and speed limit
 int[][][] typeValues = {
-  {{255, 0, 0}, {5}, {20}, {1}},
-  {{0, 255, 0}, {5}, {20}, {1}}
+  {{255, 0, 0}, {5}, {20}, {10}},
+  {{0, 255, 0}, {5}, {20}, {10}}
 };
 
 ParticleType[] particleTypes = new ParticleType[typeInteractions.length];
